@@ -1,4 +1,27 @@
-my_x: 0 value: 0 
-my_x: 0 value: 0 
-my_x: 0 value: 0 
-my_x: 0 value: 0 
+rank:_1 Numero: 90
+rank:_2 Numero: 135
+Rank_2 	ENVIA 135 	A Rank_3
+---------------------------------------
+
+rank:_0 Numero: 45
+rank:_3 Numero: 180
+Rank_0 	ENVIA 45 	A Rank_1
+---------------------------------------
+
+Rank_1 	RECIVE 45 	DE Rank_0
+---------------------------------------
+
+Rank_1 	ENVIA 135 	A Rank_3
+---------------------------------------
+
+Rank_3 	RECIVE 135 	DE Rank_2
+---------------------------------------
+
+Rank_3 	RECIVE 135 	DE Rank_1
+---------------------------------------
+
+------------------
+|   Total: 450   |
+------------------
+
+Tiempo de ejecucion: 0.000353 segundos 

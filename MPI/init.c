@@ -5,30 +5,44 @@
 #include <time.h>
 
 int main(int argc, char *argv[]) {
-  int size, rank, randNum, value, i;
-  double my_x, sum;
+  int size, rank, randNum = 0, value_recv = 0;
+  int my_x = 0, sum = 0;
+  double start = 0, end = 0, elapsed_time = 0;
+
   MPI_Init(&argc, &argv);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-  srand(time(NULL) + rank);
-  randNum = rand();
+  start = MPI_Wtime();
 
-  // printf("rank: %d Numero: %d \n", rank, randNum);
+  srand((unsigned int)time(NULL));
+  my_x = (int)(rand() % 50) * (rank + 1);
 
-  for (i = 1; i <= log2(size); i++) {
-    if (rank % (int)(pow(2, i)) == pow(2, i) - 1) {
-      MPI_Recv(&value, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-      my_x = my_x + value;
-    } else if (rank % (int)(pow(2, i)) == pow(2, i) - pow(2, i - 1) - 1) {
-      MPI_Send(&my_x, 1, MPI_INT, 1, 0, MPI_COMM_WORLD);
+  printf("rank:_%d Numero: %d\n", rank, my_x);
+
+  int powParser(int base, int exponent) {
+    return (int)pow((double)base, (double)exponent);
+  }
+
+  for (int i = 1; i <= log2(size); i++) {
+    if ((rank % powParser(2, i)) == (powParser(2, i) - 1)) {
+      MPI_Recv(&value_recv, 1, MPI_INT, rank - powParser(2, i - 1), 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+      printf("Rank_%d \tRECIVE %d \tDE Rank_%d\n---------------------------------------\n\n", rank, value_recv, rank - powParser(2, i - 1));
+      my_x = my_x + value_recv;
+    } else if ((rank % powParser(2, i)) == (powParser(2, i) - powParser(2, i - 1) - 1)) {
+      MPI_Send(&my_x, 1, MPI_INT, rank + powParser(2, i - 1), 0, MPI_COMM_WORLD);
+      printf("Rank_%d \tENVIA %d \tA Rank_%d\n---------------------------------------\n\n", rank, my_x, (rank + powParser(2, i - 1)));
     }
   }
 
-  printf("my_x: %d value: %d \n", my_x, value);
-  // if(rank==0){
+  end = MPI_Wtime();
 
-  // }
+  if (rank == size - 1) {
+    printf("------------------\n|   Total: %d   |\n------------------\n\n", my_x);
+    elapsed_time = end - start;
+    printf("Tiempo de ejecucion: %.6f segundos \n", elapsed_time);
+  }
+
   MPI_Finalize();
   return 0;
 }
