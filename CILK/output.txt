@@ -1,9 +1,8 @@
-mpicc init.c -o init -lm -L/opt/cilk/lib -lcilkrts -fcilkplus
-init.c: In function ‘main’:
-init.c:8:14: warning: implicit declaration of function ‘__cilkrts_get_nworkers’ [-Wimplicit-function-declaration]
-   int size = __cilkrts_get_nworkers();
-              ^~~~~~~~~~~~~~~~~~~~~~
-init.c:9:14: warning: implicit declaration of function ‘__cilkrts_get_worker_number’ [-Wimplicit-function-declaration]
-   int rank = __cilkrts_get_worker_number();
-              ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-srun: error: Invalid numeric value "p" for --ntasks.
+make: Nothing to be done for `all'.
+MY_X is:  24 executed by worker 0
+MY_X is:  24 executed by worker 0
+MY_X is:  48 executed by worker 1
+MY_X is:  24 executed by worker 0
+MY_X is:  72 executed by worker 2
+MY_X is:  24 executed by worker 0
+MY_X is:  48 executed by worker 1

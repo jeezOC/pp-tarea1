@@ -9,9 +9,10 @@ cd $SLURM_SUBMIT_DIR
 
 
 module load gcc/7.2.0
-module load mpich/3.2.1-gcc-7.2.0
 
 make
 
-srun -np 4 ./init.c
+export CILK_NWORKERS=4
+
+srun ./init
 
