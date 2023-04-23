@@ -15,8 +15,6 @@ my_x = random.randint(0, 49) * (rank + 1)
 
 print("rank:_%d Numero: %d" % (rank, my_x))
 
-# def powParser(base, exponent):
-#     return int(math.pow(base, exponent))
 
 for i in range(1, int(math.log2(size)) + 1):
     if (rank % pow(2, i)) == (pow(2, i) - 1):
