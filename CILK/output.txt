@@ -1,8 +1,38 @@
-make: Nothing to be done for `all'.
-MY_X is:  24 executed by worker 0
-MY_X is:  24 executed by worker 0
-MY_X is:  48 executed by worker 1
-MY_X is:  24 executed by worker 0
-MY_X is:  72 executed by worker 2
-MY_X is:  24 executed by worker 0
-MY_X is:  48 executed by worker 1
+gcc -fcilkplus -fopenmp -Wall -O3 -o init init.c -lcilkrts -lm -ldl
+init.c: In function ‘intento’:
+init.c:8:54: warning: implicit declaration of function ‘__cilkrts_get_worker_number’ [-Wimplicit-function-declaration]
+   printf("hello im fakerank=>%d from P=>%d\n",rank,  __cilkrts_get_worker_number());
+                                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+init.c: In function ‘main’:
+init.c:38:7: warning: unused variable ‘randoms’ [-Wunused-variable]
+   int randoms[size];
+       ^~~~~~~
+hello im fakerank=>0 from P=>0
+my_rand id=> 1
+Rank_0 recive 0 ->  Rank_0 
+ Rank_0 envia 1 ->  Rank_0 
+ Rank_0 envia 1 ->  Rank_1 
+ hello im fakerank=>1 from P=>0
+my_rand id=> 87
+Rank_1 recive 0 ->  Rank_1 
+ Rank_1 envia 87 ->  Rank_1 
+ Rank_1 recive 87 ->  Rank_0 
+ Rank_1 envia 87 ->  Rank_3 
+ hello im fakerank=>2 from P=>3
+my_rand id=> 155
+Rank_2 recive 0 ->  Rank_2 
+ Rank_2 envia 155 ->  Rank_2 
+ Rank_2 envia 155 ->  Rank_3 
+ hello im fakerank=>3 from P=>1
+my_rand id=> 46
+Rank_3 recive 0 ->  Rank_3 
+ Rank_3 envia 46 ->  Rank_3 
+ Rank_3 recive 46 ->  Rank_2 
+ Rank_3 recive 46 ->  Rank_1 
+ hello im fakerank=>3 from P=>0
+my_rand id=> 280
+Rank_3 recive 0 ->  Rank_3 
+ Rank_3 envia 280 ->  Rank_3 
+ Rank_3 recive 280 ->  Rank_2 
+ Rank_3 recive 280 ->  Rank_1 
+ La suma es: 0

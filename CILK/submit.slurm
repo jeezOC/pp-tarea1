@@ -6,13 +6,10 @@
 #SBATCH --time=00:05:00
 
 cd $SLURM_SUBMIT_DIR
-
-
 module load gcc/7.2.0
-
 make
 
 export CILK_NWORKERS=4
 
-srun ./init
+srun -n 1 ./init
 

@@ -1,44 +1,54 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <cilk/cilk.h>
 #include <math.h>
-#include <time.h>
-#include <cilk/cilk_api.h>
+#include <cilk/cilk.h>
 
 
-void loop(int round){
-  int rank = __cilkrts_get_worker_number();
+void intento (int rank,int size, int *sum){
+  printf("hello im fakerank=>%d from P=>%d\n",rank,  __cilkrts_get_worker_number());
 
-  srand((unsigned int)time(NULL));
-  int my_x = (int)(rand() % 50) * (rank + 1);
+  int my_value=0;
+  int *valueRecived = &my_value;
+  int random = (rand() % 100 * rank+1);
 
-  if(round == rank){
-    printf("MY_X is:  %d executed by worker %d\n", my_x, rank);
+  printf("my_rand id=> %d\n", random);
+
+  for (int i = 0; i <= log2(size); i++) {
+
+    if (rank % (int) pow(2, i) == (int) pow(2, i) - 1) {
+      //        printf("esta mierda tiene %d\n", *valueRecived);
+      //recive(&valueRecived);
+      int index = rank - (int)pow(2,i-1);
+      printf("Rank_%d recive %d ->  Rank_%d \n ",rank,*valueRecived, index);
+      sum += *valueRecived;     
+    }
+
+    if (rank % (int) pow(2, i) == (int) pow(2, i) - (int) pow(2, i - 1) - 1) {
+      int index = rank + (int)pow(2,i-1);
+      //int aux = randoms[index];
+      //send(randoms[index]);
+      *valueRecived = random;
+      printf("Rank_%d envia %d ->  Rank_%d \n ",rank,*valueRecived, index);
+    }
   }
 }
 
-int main() {  
-  int size = __cilkrts_get_nworkers();
-/* int my_x = 0, sum = 0, randNum = 0, value_recv = 0;*/
-/*  
- *  double start_time = 0, end_time = 0, elapsed_time = 0;
- *  start_time = __cilkrts_get_pedigree(); 
- *  */  
+int main() { 
+  int size =4;
+  int randoms[size];
 
-  
-  for(int i = 0; i <size; i++){
-   cilk_spawn loop(i);
+  //Inicializar el arreglo con valores aleatorios
+ // for (int i = 0; i < size; i++) {
+   // randoms[i] = rand() % 100;
+  //}
+  // Sumar los valores del arreglo en paralelo
+  int sum = 0;
+#pragma cilk grainsize =1
+  cilk_for(int rank = 0; rank< size; ++rank){
+    cilk_spawn intento(rank,size, &sum);
   }
-
-/*  printf("rank:_%d Numero: %d\n", rank, my_x);*/
-  cilk_sync;
- /* end_time = __cilkrts_get_pedigree();*/
-
-/*  if (rank == size - 1) {
-    elapsed_time = end_time - start_time;
-    printf("Tiempo de ejecucion: %.6f segundos \n", elapsed_time);
-  }
-*/
+  cilk_sync;  
+  printf("La suma es: %d\n", sum);
 
   return 0;
 }
