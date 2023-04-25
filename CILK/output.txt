@@ -1,29 +1,7 @@
-gcc -fcilkplus -fopenmp -Wall -O3 -o init init.c -lcilkrts -lm -ldl
-init.c: In function ‘main’:
-init.c:29:32: warning: unused variable ‘d’ [-Wunused-variable]
-     int my_value=0, vr=0, o=0, d=0;
-                                ^
-init.c:29:27: warning: unused variable ‘o’ [-Wunused-variable]
-     int my_value=0, vr=0, o=0, d=0;
-                           ^
-init.c:29:21: warning: unused variable ‘vr’ [-Wunused-variable]
-     int my_value=0, vr=0, o=0, d=0;
-                     ^~
-init.c:29:9: warning: unused variable ‘my_value’ [-Wunused-variable]
-     int my_value=0, vr=0, o=0, d=0;
-         ^~~~~~~~
-init.c:23:7: warning: unused variable ‘valR’ [-Wunused-variable]
-   int valR = 0;
-       ^~~~
-load rand in 0 = 3
-load rand in 1 = 39
-load rand in 2 = 57
-load rand in 3 = 48
-load rand in 4 = 175
-Rank_0 -> Rank_1 => 3 
-Rank_1 <- Rank_0 => 3 
-Rank_1 -> Rank_3 => 39 
-Rank_2 -> Rank_3 => 57 
-Rank_3 <- Rank_2 => 57 
-Rank_4 -> Rank_5 => 175 
-La suma es: 60
+make: Nothing to be done for `all'.
+size=>4Rank_0 set my_val = 1
+Hola soy fake_rank_0 desde el worker_0
+Rank_0 -> Rank_1 => 1 
+Rank_3 set my_val = 1
+Hola soy fake_rank_3 desde el worker_3
+total =>2 

@@ -7,44 +7,24 @@ int powParser(int base, int exponent) {
   return (int)pow((double)base, (double)exponent);
 }
 
-int main() { 
-  int size =5;
-  int randoms[size];
-  int mail[size];
-  //Inicializar el arreglo con valores aleatorios
-  for (int i = 0; i < size; i++) {
-    int random = (rand() % 50 * i+3);
-    printf("load rand in %d = %d\n", i, random);
-    randoms[i] = random;
-  }
-  // Sumar los valores del arreglo en paralelo
-  int sum = 0;
+int process(int rank, int size){
+  int my_val=0;
+  if(rank==__cilkrts_get_worker_number()){
+    srand((unsigned int)time(NULL));
+    int random = (rand() % 50 * rank+1);
+    my_val=random;
+    printf("Rank_%d set my_val = %d\n", rank, my_val);
+    int val_r =0, dest=0, origin=0;
 
-  int valR = 0;
-  int origin = 0;
-  int dest = 0;
-#pragma cilk grainsize =1
-  cilk_for(int rank = 0; rank< size; ++rank){
-    //  printf("hello from P=>%d\n",  __cilkrts_get_worker_number());
-    int my_value=0, vr=0, o=0, d=0;
-    //int *sum = &my_value;
-
-    // printf("my_rand %d\n", randoms[rank]);
-
-    //for(int j = 0; j<size; ++j){
-    // if(rank ==j){
+    printf("Hola soy fake_rank_%d desde el worker_%d\n", rank, __cilkrts_get_worker_number());
+    
     for (int i = 0; i <= log2(size); i++) {
-
       if ((rank % powParser(2, i)) == (powParser(2, i) - 1)) {
-        //        printf("esta mierda tiene %d\n", *valueRecived);
-        //recive(&valueRecived)
-        //;
 
         if(origin  == (rank - powParser(2,i-1))){
           if(dest == rank && origin !=rank){
-            //*valR = randoms[origin];
-            printf("Rank_%d <- Rank_%d => %d \n",dest,origin,mail[rank]);
-            sum+= mail[rank];     
+            printf("Rank_%d <- Rank_%d => %d \n",dest,origin,val_r);
+            my_val += val_r;
           }
         }
       }
@@ -53,22 +33,30 @@ int main() {
         dest = rank+powParser(2,i-1);
         if(rank!=dest){
           origin = rank;
-          
-          mail[dest] = randoms[rank];
-          printf("Rank_%d -> Rank_%d => %d \n",origin,dest,mail[dest]);
-//rank=dest;
+          printf("Rank_%d -> Rank_%d => %d \n",origin,dest,my_val);
+          val_r=my_val;
         }
       }
-      //       }
-      //   }
-     // sum += my_value;
+    }
   }
+  return my_val;
+}
 
-  if(rank==size-1){printf("La suma es: %d\n", sum);}
-  }
+int sum = 0;
 
+void addition(int rank, int size){
+  sum += process(rank, size);
+}
 
+int main(int argc, char *argv[]) { 
+  int size =__cilkrts_get_nworkers();
+  printf("size=>%d",size);
 
+  for(int rank=0; rank<size; rank++){
+    cilk_spawn addition(rank, size);
+  } 
+  cilk_sync;
 
+  printf("total =>%d \n", sum);
   return 0;
 }
