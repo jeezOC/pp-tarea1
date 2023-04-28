@@ -9,7 +9,7 @@ cd $SLURM_SUBMIT_DIR
 module load gcc/7.2.0
 make
 
-export CILK_NWORKERS=4
-
+export CILK_NWORKERS=4 
+#export SUM=0
 srun -n 1 ./init
 

@@ -1,7 +1,18 @@
 make: Nothing to be done for `all'.
-size=>4Rank_0 set my_val = 1
+size=>4
+
+Rank_0 set my_val = 1
 Hola soy fake_rank_0 desde el worker_0
 Rank_0 -> Rank_1 => 1 
-Rank_3 set my_val = 1
+Rank_1 set my_val = 49
+Hola soy fake_rank_1 desde el worker_1
+Rank_1 <- Rank_0 => 0 
+Rank_1 -> Rank_3 => 49 
+Rank_2 set my_val = 97
+Hola soy fake_rank_2 desde el worker_2
+Rank_2 -> Rank_3 => 97 
+Rank_3 set my_val = 145
 Hola soy fake_rank_3 desde el worker_3
-total =>2 
+TOTAL=> 292
+
+Tiempo de ejecución: 0.001000 segundos
